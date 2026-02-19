@@ -1,1 +1,1 @@
-/home/iluminatto/Documents/Dev/Skill/.agent/agents/debugger.md
+../../.claude/agents/debugger.md

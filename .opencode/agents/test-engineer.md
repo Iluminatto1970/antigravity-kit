@@ -1,1 +1,1 @@
-/home/iluminatto/Documents/Dev/Skill/.agent/agents/test-engineer.md
+../../.claude/agents/test-engineer.md

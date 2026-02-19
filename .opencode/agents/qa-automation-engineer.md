@@ -1,1 +1,1 @@
-/home/iluminatto/Documents/Dev/Skill/.agent/agents/qa-automation-engineer.md
+../../.claude/agents/qa-automation-engineer.md

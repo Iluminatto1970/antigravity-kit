@@ -1,1 +1,1 @@
-/home/iluminatto/Documents/Dev/Skill/.agent/agents/game-developer.md
+../../.claude/agents/game-developer.md

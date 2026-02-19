@@ -1,1 +1,1 @@
-/home/iluminatto/Documents/Dev/Skill/.agent/agents/devops-engineer.md
+../../.claude/agents/devops-engineer.md

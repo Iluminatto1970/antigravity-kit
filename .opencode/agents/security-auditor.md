@@ -1,1 +1,1 @@
-/home/iluminatto/Documents/Dev/Skill/.agent/agents/security-auditor.md
+../../.claude/agents/security-auditor.md

@@ -1,1 +1,1 @@
-/home/iluminatto/Documents/Dev/Skill/.agent/agents/database-architect.md
+../../.claude/agents/database-architect.md

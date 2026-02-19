@@ -1,1 +1,1 @@
-/home/iluminatto/Documents/Dev/Skill/.agent/agents/product-manager.md
+../../.claude/agents/product-manager.md

@@ -1,1 +1,1 @@
-/home/iluminatto/Documents/Dev/Skill/.agent/agents/explorer-agent.md
+../../.claude/agents/explorer-agent.md

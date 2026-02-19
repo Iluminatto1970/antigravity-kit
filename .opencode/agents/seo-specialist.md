@@ -1,1 +1,1 @@
-/home/iluminatto/Documents/Dev/Skill/.agent/agents/seo-specialist.md
+../../.claude/agents/seo-specialist.md

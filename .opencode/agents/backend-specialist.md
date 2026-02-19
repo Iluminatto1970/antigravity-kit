@@ -1,1 +1,1 @@
-/home/iluminatto/Documents/Dev/Skill/.agent/agents/backend-specialist.md
+../../.claude/agents/backend-specialist.md

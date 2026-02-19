@@ -1,1 +1,1 @@
-/home/iluminatto/Documents/Dev/Skill/.agent/agents/mobile-developer.md
+../../.claude/agents/mobile-developer.md

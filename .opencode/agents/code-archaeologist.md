@@ -1,1 +1,1 @@
-/home/iluminatto/Documents/Dev/Skill/.agent/agents/code-archaeologist.md
+../../.claude/agents/code-archaeologist.md

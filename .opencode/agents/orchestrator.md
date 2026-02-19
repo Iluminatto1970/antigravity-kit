@@ -1,1 +1,1 @@
-/home/iluminatto/Documents/Dev/Skill/.agent/agents/orchestrator.md
+../../.claude/agents/orchestrator.md

@@ -1,6 +1,6 @@
-# Antigravity Kit - OpenCode Edition
+# Antigravity Kit
 
-> AI Agent templates with Skills, Agents, and Workflows adapted for OpenCode
+> AI Agent templates for Claude, Gemini, ChatGPT & OpenCode
 
 <div align="center">
     <a href="https://unikorn.vn/p/antigravity-kit?ref=unikorn" target="_blank"><img src="https://unikorn.vn/api/widgets/badge/antigravity-kit?theme=dark" alt="Antigravity Kit" style="width: 210px; height: 54px;" width="210" height="54" /></a>
@@ -10,45 +10,68 @@
 
 | Component | Count | Description |
 |-----------|-------|-------------|
-| **Agents** | 20 | Specialist AI personas (frontend, backend, security, PM, QA, etc.) |
+| **Agents** | 20 | Specialist AI personas |
 | **Skills** | 36+ | Domain-specific knowledge modules |
 | **Commands** | 11 | Slash command procedures |
 
-## Quick Start
+---
 
-### Prerequisites
+## Project Structure
 
-- OpenCode CLI installed
-- API key configured (run `/connect` in OpenCode)
+```
+antigravity-kit/
+├── .claude/           # For Claude, Gemini, ChatGPT (original)
+│   ├── agents/        # 20 AI agent definitions
+│   ├── skills/        # 36+ skill modules
+│   └── workflows/     # 11 command workflows
+│
+├── .opencode/         # For OpenCode (specific version)
+│   ├── agents/        # Symlinks to .claude/agents
+│   └── skills/        # Symlinks to .claude/skills
+│
+├── install.sh         # Linux/macOS installer
+├── install.ps1        # Windows PowerShell installer
+├── install.bat        # Windows CMD installer
+│
+├── AGENTS.md         # Quick reference
+├── GUIDE-*.md        # Full guides (PT/EN/ES)
+└── INSTALL.md        # Installation guide
+```
 
-### Installation
+---
 
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/Iluminatto1970/antigravity-kit.git
-   cd antigravity-kit
-   ```
+## Choose Your Platform
 
-2. Run the installer:
-   ```bash
-   # Linux/macOS
-   ./install.sh
+| Platform | Directory | How to Use |
+|----------|-----------|------------|
+| **Claude/Gemini** | `.claude/` | Copy `.claude/` folder to your project |
+| **OpenCode** | `.opencode/` | Use with OpenCode CLI |
 
-   # Windows (PowerShell)
-   .\install.ps1 -Full
+---
 
-   # Windows (CMD)
-   install.bat
-   ```
+## Quick Install
 
-3. Start Openbash
-   opencode
-   ```
+### OpenCode
+
+```bash
+# Linux/macOS
+./install.sh
+
+# Windows
+.\install.ps1 -Full
+```
+
+### Claude/Gemini/ChatGPT
+
+Copy the `.claude/` folder to your project root.
+
+---
 
 ## Quick Reference
 
-Code:
-   ```| Shortcut | Agent |
+### Agents
+
+| Shortcut | Agent |
 |----------|-------|
 | `@b` | backend-specialist |
 | `@f` | frontend-specialist |
@@ -71,7 +94,7 @@ Code:
 | `@po` | product-owner |
 | `@e` | explorer-agent |
 
-## Commands
+### Commands
 
 | Command | Description |
 |---------|-------------|
@@ -87,49 +110,17 @@ Code:
 | `/test` | Generate and run tests |
 | `/ui-ux-pro-max` | Design with 50+ styles |
 
-## Repository Structure
-
-```
-.
-├── .agent/              # OpenCode config (agents, skills, workflows)
-│   ├── agents/          # 20 Agent definitions
-│   ├── skills/          # 36+ Skill modules
-│   └── workflows/       # 11 Command workflows
-├── agent/               # Agent markdown files (reference)
-├── command/             # Command definitions (reference)
-├── skill/               # Skill modules (reference)
-├── .opencode/           # Symlinks for OpenCode discovery
-├── AGENTS.md           # Agent documentation
-├── README.md
-└── INSTALL.md          # Installation guide
-```
+---
 
 ## Documentation
 
-- **[AGENTS.md](./AGENTS.md)** - Complete list of agents, commands, and skills with shortcuts
+- **[AGENTS.md](./AGENTS.md)** - Quick reference
 - **[GUIDE-PT.md](./GUIDE-PT.md)** - Portuguese guide
 - **[GUIDE-ES.md](./GUIDE-ES.md)** - Spanish guide
 - **[GUIDE-EN.md](./GUIDE-EN.md)** - English guide
 - **[INSTALL.md](./INSTALL.md)** - Installation guide
 
-## Examples
-
-```bash
-# Invoke backend specialist
-@b "Criar API REST para autenticação"
-
-# Invoke frontend specialist
-@f "Criar componente de login"
-
-# Debug an issue
-@db "Login retorna erro 500"
-
-# Plan a feature
-/plan implementar sistema de notificações
-
-# Create new feature
-/create landing page com hero section
-```
+---
 
 ## License
 

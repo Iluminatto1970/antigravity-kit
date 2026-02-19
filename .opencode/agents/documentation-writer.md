@@ -1,1 +1,1 @@
-/home/iluminatto/Documents/Dev/Skill/.agent/agents/documentation-writer.md
+../../.claude/agents/documentation-writer.md
