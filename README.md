@@ -2,6 +2,10 @@
 
 > AI Agent templates with Skills, Agents, and Workflows adapted for OpenCode
 
+<div align="center">
+    <a href="https://unikorn.vn/p/antigravity-kit?ref=unikorn" target="_blank"><img src="https://unikorn.vn/api/widgets/badge/antigravity-kit?theme=dark" alt="Antigravity Kit" style="width: 210px; height: 54px;" width="210" height="54" /></a>
+</div>
+
 ## What's Included
 
 | Component | Count | Description |
@@ -37,40 +41,14 @@
    install.bat
    ```
 
-3. Start OpenCode:
-   ```bash
+3. Start Openbash
    opencode
    ```
 
-## Auto Install
-
-### Quick Download & Run
-
-**Linux/macOS:**
-```bash
-curl -fsSL https://raw.githubusercontent.com/Iluminatto1970/antigravity-kit/main/install.sh -o install.sh && chmod +x install.sh && ./install.sh
-```
-
-**Windows (PowerShell):**
-```powershell
-irm https://raw.githubusercontent.com/Iluminatto1970/antigravity-kit/main/install.ps1 -o install.ps1; .\install.ps1 -Full
-```
-
-### Installer Options
-
-| Option | Description |
-|--------|-------------|
-| Full Install | Install OpenCode + Setup structure |
-| Setup Only | Setup structure (OpenCode already installed) |
-| Install OpenCode | Install OpenCode CLI only |
-
-### Manual Install
-
-See [INSTALL.md](./INSTALL.md) for detailed instructions.
-
 ## Quick Reference
 
-| Shortcut | Agent |
+Code:
+   ```| Shortcut | Agent |
 |----------|-------|
 | `@b` | backend-specialist |
 | `@f` | frontend-specialist |
@@ -122,7 +100,8 @@ See [INSTALL.md](./INSTALL.md) for detailed instructions.
 ├── skill/               # Skill modules (reference)
 ├── .opencode/           # Symlinks for OpenCode discovery
 ├── AGENTS.md           # Agent documentation
-└── README.md
+├── README.md
+└── INSTALL.md          # Installation guide
 ```
 
 ## Documentation
@@ -131,6 +110,7 @@ See [INSTALL.md](./INSTALL.md) for detailed instructions.
 - **[GUIDE-PT.md](./GUIDE-PT.md)** - Portuguese guide
 - **[GUIDE-ES.md](./GUIDE-ES.md)** - Spanish guide
 - **[GUIDE-EN.md](./GUIDE-EN.md)** - English guide
+- **[INSTALL.md](./INSTALL.md)** - Installation guide
 
 ## Examples
 
