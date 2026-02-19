@@ -11,236 +11,158 @@ CYAN='\033[0;36m'
 NC='\033[0m'
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+AG_KIT_DIR="${AG_KIT_DIR:-$HOME/.ag-kit}"
 
-echo -e "${BLUE}╔═══════════════════════════════════════════════════╗${NC}"
-echo -e "${BLUE}║   Antigravity Kit - OpenCode Installer          ║${NC}"
-echo -e "${BLUE}╚═══════════════════════════════════════════════════╝${NC}"
-echo ""
-
-# Detect OS
-detect_os() {
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        echo "linux"
-    elif [[ "$OSTYPE" == "darwin"* ]]; then
-        echo "macos"
-    elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
-        echo "windows"
-    else
-        echo "unknown"
-    fi
-}
-
-OS=$(detect_os)
-echo -e "${YELLOW}Detected OS: $OS${NC}"
-
-# Check if OpenCode is installed
-check_opencode() {
-    if command -v opencode &> /dev/null; then
-        return 0
-    fi
-    return 1
+show_help() {
+    echo -e "${BLUE}Antigravity Kit Installer${NC}"
+    echo ""
+    echo "Usage: $0 [command] [options]"
+    echo ""
+    echo "Commands:"
+    echo "  setup [path]     Setup in project (default: current dir)"
+    echo "  global           Install globally"
+    echo "  install          Install OpenCode CLI"
+    echo "  gui              Open OpenCode GUI"
+    echo "  help             Show this help"
+    echo ""
+    echo "Options:"
+    echo "  -f, --force      Force overwrite"
+    echo "  -r, --remove     Remove installation"
 }
 
 # Install OpenCode CLI
 install_opencode() {
     echo -e "${YELLOW}Installing OpenCode CLI...${NC}"
     
-    if [[ "$OS" == "linux" || "$OS" == "macos" ]]; then
+    if [[ "$OSTYPE" == "linux-gnu"* ]] || [[ "$OSTYPE" == "darwin"* ]]; then
         curl -fsSL https://opencode.ai/install | bash
-    elif [[ "$OS" == "windows" ]]; then
-        echo -e "${YELLOW}Installing OpenCode on Windows...${NC}"
-        choco install opencode -y 2>/dev/null || echo -e "${RED}Please install OpenCode manually: https://opencode.ai${NC}"
+    elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+        choco install opencode -y 2>/dev/null || echo -e "${RED}Windows: run as admin or install manually${NC}"
     else
-        echo -e "${RED}Unsupported OS. Please install OpenCode manually.${NC}"
+        echo -e "${RED}Unsupported OS. Install manually: https://opencode.ai${NC}"
         return 1
     fi
-    
-    echo -e "${GREEN}OpenCode CLI ready!${NC}"
+    echo -e "${GREEN}✓ OpenCode CLI ready!${NC}"
 }
 
-# Setup structure in current project
+# Setup in project
 setup_project() {
-    local target_dir="${1:-$SCRIPT_DIR}"
+    local target_dir="${1:-.}"
+    local force="$2"
+    
     cd "$target_dir"
+    echo -e "${CYAN}Setting up in: $(pwd)${NC}"
     
-    echo -e "${YELLOW}Setting up Antigravity Kit in: $(pwd)${NC}"
-    
-    # Check if running from antigravity-kit repo
-    if [ -d ".claude" ]; then
-        echo -e "${CYAN}Setting up .opencode/ structure...${NC}"
-        
-        # Create .opencode directories
-        mkdir -p .opencode/agents
-        mkdir -p .opencode/skills
-        
-        # Create symlinks for agents
-        echo -e "${BLUE}Creating agent symlinks...${NC}"
-        for agent in .claude/agents/*.md; do
-            if [ -f "$agent" ]; then
-                agent_name=$(basename "$agent")
-                ln -sf "../.claude/agents/$agent_name" ".opencode/agents/" 2>/dev/null || true
-                echo -e "  ✓ $agent_name"
-            fi
-        done
-        
-        # Create symlinks for skills
-        echo -e "${BLUE}Creating skill symlinks...${NC}"
-        for skill in .claude/skills/*/; do
-            if [ -d "$skill" ]; then
-                skill_name=$(basename "$skill")
-                ln -sf "../.claude/skills/$skill_name" ".opencode/skills/" 2>/dev/null || true
-                echo -e "  ✓ $skill_name"
-            fi
-        done
-        
-        # Create .agent symlink for compatibility
-        if [ ! -L ".agent" ] && [ ! -d ".agent" ]; then
-            ln -s .claude .agent
-            echo -e "  ✓ .agent (symlink → .claude)"
-        fi
-        
-        echo -e "${GREEN}Setup complete!${NC}"
+    # Check for .claude or .agent
+    if [ -d "$SCRIPT_DIR/.claude" ]; then
+        local src_dir="$SCRIPT_DIR/.claude"
+    elif [ -d "$AG_KIT_DIR/.claude" ]; then
+        local src_dir="$AG_KIT_DIR/.claude"
     else
-        echo -e "${RED}Error: .claude/ directory not found${NC}"
-        echo -e "${YELLOW}This doesn't appear to be the Antigravity Kit repository${NC}"
-        return 1
-    fi
-}
-
-# Install to external project
-install_to_project() {
-    local target_dir="$1"
-    
-    if [ -z "$target_dir" ]; then
-        echo -e "${RED}Please specify a target directory${NC}"
+        echo -e "${RED}Error: .claude not found${NC}"
         return 1
     fi
     
-    if [ ! -d "$target_dir" ]; then
-        echo -e "${RED}Directory not found: $target_dir${NC}"
-        return 1
+    # Copy .claude/
+    if [ "$force" = "true" ] || [ ! -d ".claude" ]; then
+        cp -r "$src_dir" .claude
+        echo -e "${GREEN}✓ Copied .claude/${NC}"
+    else
+        echo -e "${YELLOW}! .claude already exists (use -f to overwrite)${NC}"
     fi
-    
-    echo -e "${YELLOW}Installing to: $target_dir${NC}"
-    
-    # Copy .claude/ directory
-    cp -r "$SCRIPT_DIR/.claude" "$target_dir/"
-    echo -e "${GREEN}✓ Copied .claude/${NC}"
     
     # Create .agent symlink
-    cd "$target_dir"
-    ln -sf .claude .agent 2>/dev/null || true
-    echo -e "${GREEN}✓ Created .agent symlink${NC}"
+    if [ ! -L ".agent" ] && [ ! -d ".agent" ]; then
+        ln -s .claude .agent
+        echo -e "${GREEN}✓ Created .agent symlink${NC}"
+    fi
     
     # Setup .opencode/
-    mkdir -p .opencode/agents
-    mkdir -p .opencode/skills
+    mkdir -p .opencode/agents .opencode/skills
     
     for agent in .claude/agents/*.md; do
-        if [ -f "$agent" ]; then
-            ln -sf "../.claude/agents/$(basename "$agent")" ".opencode/agents/" 2>/dev/null || true
-        fi
+        [ -f "$agent" ] && ln -sf "../.claude/agents/$(basename "$agent")" .opencode/agents/ 2>/dev/null || true
     done
     
     for skill in .claude/skills/*/; do
-        if [ -d "$skill" ]; then
-            ln -sf "../.claude/skills/$(basename "$skill")" ".opencode/skills/" 2>/dev/null || true
-        fi
+        [ -d "$skill" ] && ln -sf "../.claude/skills/$(basename "$skill")" .opencode/skills/ 2>/dev/null || true
     done
     
-    echo -e "${GREEN}✓ Created .opencode/ structure${NC}"
-    echo -e "${GREEN}Installation complete!${NC}"
+    echo -e "${GREEN}✓ Setup complete!${NC}"
 }
 
-# Show menu
-show_menu() {
-    echo ""
-    echo -e "${BLUE}Select option:${NC}"
-    echo "  1. Full Install (OpenCode CLI + Setup)"
-    echo "  2. Setup in current directory"
-    echo "  3. Install to external project"
-    echo "  4. Install OpenCode CLI only"
-    echo "  5. Open OpenCode GUI"
-    echo "  6. Exit"
-    echo ""
-    echo -n "Enter [1-6]: "
+# Install globally
+install_global() {
+    echo -e "${YELLOW}Installing globally to: $AG_KIT_DIR${NC}"
+    
+    # Create global directory
+    mkdir -p "$AG_KIT_DIR"
+    
+    # Copy files
+    cp -r "$SCRIPT_DIR/.claude" "$AG_KIT_DIR/"
+    cp -r "$SCRIPT_DIR/.opencode" "$AG_KIT_DIR/" 2>/dev/null || true
+    
+    # Add to PATH hint
+    echo -e "${GREEN}✓ Installed to $AG_KIT_DIR${NC}"
+    echo -e "${CYAN}To use globally in a project:${NC}"
+    echo "  ln -s $AG_KIT_DIR/.claude your-project/.claude"
+    echo "  ln -s $AG_KIT_DIR/.opencode your-project/.opencode"
+}
+
+# Remove installation
+remove_installation() {
+    local target_dir="${1:-.}"
+    cd "$target_dir"
+    
+    rm -rf .claude .agent .opencode 2>/dev/null
+    echo -e "${GREEN}✓ Removed from $(pwd)${NC}"
 }
 
 # Main
-main() {
-    # Auto-detect if running from antigravity-kit repo
-    if [ -d "$SCRIPT_DIR/.claude" ]; then
-        # Running from repo - auto-setup
-        if [ -d "$SCRIPT_DIR/.opencode" ]; then
-            echo -e "${GREEN}Antigravity Kit already configured!${NC}"
-        else
-            setup_project "$SCRIPT_DIR"
-        fi
-        
-        if [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
-            show_menu
-            read -r choice
-        else
-            choice=1
-        fi
-    else
-        show_menu
-        read -r choice
-    fi
-    
-    case $choice in
-        1)
-            echo ""
-            if ! check_opencode; then
-                install_opencode
-            else
-                echo -e "${GREEN}OpenCode already installed${NC}"
-            fi
-            setup_project
-            echo ""
-            echo -e "${GREEN}✓ Installation complete! Run 'opencode' to start${NC}"
-            ;;
-        2)
-            setup_project
-            ;;
-        3)
-            echo ""
-            echo -n "Enter target project path: "
-            read -r target
-            install_to_project "$target"
-            ;;
-        4)
-            install_opencode
-            ;;
-        5)
-            if check_opencode; then
-                opencode --gui 2>/dev/null || opencode
-            else
-                echo -e "${RED}OpenCode not installed. Run option 4 first.${NC}"
-            fi
-            ;;
-        6)
-            echo -e "${YELLOW}Goodbye!${NC}"
-            exit 0
-            ;;
-        *)
-            echo -e "${RED}Invalid option${NC}"
-            ;;
-    esac
-}
-
-# Handle direct arguments
 case "${1:-}" in
-    --setup|-s)
-        setup_project "${2:-}"
+    setup|-s|--setup)
+        setup_project "${2:-.}" "${3:-}"
         ;;
-    --install|-i)
-        install_to_project "$2"
+    global|-g|--global)
+        install_global
         ;;
-    --opencode|-o)
+    install|-i|--install)
         install_opencode
         ;;
+    gui|-o|--gui)
+        command -v opencode &>/dev/null && opencode --gui || echo -e "${RED}OpenCode not installed${NC}"
+        ;;
+    remove|-r|--remove)
+        remove_installation "${2:-.}"
+        ;;
+    help|-h|--help)
+        show_help
+        ;;
+    "")
+        # Interactive mode
+        echo -e "${BLUE}╔═══════════════════════════════════════════╗${NC}"
+        echo -e "${BLUE}║   Antigravity Kit - Installer            ║${NC}"
+        echo -e "${BLUE}╚═══════════════════════════════════════════╝${NC}"
+        echo ""
+        echo "  1. Setup in current project"
+        echo "  2. Setup in specific project"
+        echo "  3. Install globally"
+        echo "  4. Install OpenCode CLI"
+        echo "  5. Open GUI"
+        echo "  6. Exit"
+        echo ""
+        read -p "Select [1-6]: " choice
+        
+        case $choice in
+            1) setup_project "." ;;
+            2) read -p "Path: " path; setup_project "$path" ;;
+            3) install_global ;;
+            4) install_opencode ;;
+            5) command -v opencode &>/dev/null && opencode --gui || echo "OpenCode not installed" ;;
+            6) exit 0 ;;
+        esac
+        ;;
     *)
-        main "$@"
+        show_help
         ;;
 esac

@@ -51,19 +51,39 @@ antigravity-kit/
 
 ## Quick Install
 
-### OpenCode
+### Per Project (Recommended)
 
 ```bash
 # Linux/macOS
-./install.sh
+./install.sh setup
 
-# Windows
-.\install.ps1 -Full
+# Windows PowerShell
+.\install.ps1 setup
+
+# Windows CMD
+install.bat setup C:\my-project
 ```
 
-### Claude/Gemini/ChatGPT
+### Global Installation
 
-Copy the `.claude/` folder to your project root.
+```bash
+# Install globally
+./install.sh global
+
+# Then use in any project
+ln -s ~/.ag-kit/.claude my-project/.claude
+ln -s ~/.ag-kit/.opencode my-project/.opencode
+```
+
+### Install OpenCode CLI
+
+```bash
+# Linux/macOS
+./install.sh install
+
+# Windows
+.\install.ps1 install
+```
 
 ---
 

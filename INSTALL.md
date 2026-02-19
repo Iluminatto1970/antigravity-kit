@@ -1,156 +1,126 @@
 # Installation Guide
 
-## Quick Install
+## Installation Types
 
-### Linux / macOS
+### 1. Per Project (Recommended)
+
+Install directly in your project directory.
 
 ```bash
-# Download and run
-curl -fsSL https://raw.githubusercontent.com/Iluminatto1970/antigravity-kit/main/install.sh -o install.sh
-chmod +x install.sh
-./install.sh
+# Linux/macOS
+./install.sh setup
+
+# Windows PowerShell
+.\install.ps1 setup
+
+# Windows CMD
+install.bat setup C:\path\to\project
 ```
 
-### Windows
+This creates:
+- `.claude/` - Agents, skills, workflows
+- `.agent/` - Symlink to `.claude/` (for compatibility)
+- `.opencode/` - Symlinks for OpenCode
 
-```powershell
-# Download and run
-irm https://raw.githubusercontent.com/Iluminatto1970/antigravity-kit/main/install.ps1 -o install.ps1
-.\install.ps1 -Full
+---
+
+### 2. Global Installation
+
+Install once, use in multiple projects.
+
+```bash
+# Linux/macOS
+./install.sh global
+
+# Windows PowerShell
+.\install.ps1 global
+
+# Windows CMD
+install.bat global
 ```
 
-Or use the batch file:
-```cmd
-install.bat
+Files are copied to: `~/.ag-kit/`
+
+**Then in each project:**
+```bash
+# Linux/macOS
+ln -s ~/.ag-kit/.claude .claude
+ln -s ~/.ag-kit/.opencode .opencode
+
+# Windows (run as Admin)
+mklink /D .claude %USERPROFILE%\.ag-kit\.claude
+mklink /D .opencode %USERPROFILE%\.ag-kit\.opencode
 ```
 
 ---
 
-## Installation Options
-
-### Option 1: Full Installation
+## Install OpenCode CLI
 
 ```bash
 # Linux/macOS
-./install.sh
-
-# Windows (PowerShell)
-.\install.ps1 -Full
-
-# Windows (CMD)
-install.bat
-```
-
-This will:
-1. Install OpenCode CLI
-2. Setup project structure (.opencode/)
-3. Create symlinks for agents and skills
-
----
-
-### Option 2: Setup Only (OpenCode already installed)
-
-```bash
-# Linux/macOS
-./install.sh --setup
+./install.sh install
 
 # Windows
-.\install.ps1 -Setup
+.\install.ps1 install
+
+# Or manually
+curl -fsSL https://opencode.ai/install | bash  # Linux/macOS
+choco install opencode                          # Windows
 ```
 
 ---
 
-### Option 3: Install OpenCode Only
+## Interactive Mode
+
+Just run the installer without arguments:
 
 ```bash
 # Linux/macOS
-./install.sh --install
+./install.sh
 
 # Windows
-.\install.ps1 -Install
+.\install.ps1
 ```
 
 ---
 
-## Manual Installation
+## Commands Reference
 
-### 1. Install OpenCode
-
-**Linux/macOS:**
-```bash
-curl -fsSL https://opencode.ai/install | bash
-```
-
-**Windows:**
-```powershell
-# Using Chocolatey
-choco install opencode
-
-# Using Scoop
-scoop install opencode
-```
-
-**Or download from:** https://github.com/anomalyco/opencode/releases
+| Command | Description |
+|---------|-------------|
+| `./install.sh setup` | Setup in current project |
+| `./install.sh setup /path/to/project` | Setup in specific project |
+| `./install.sh global` | Install globally |
+| `./install.sh install` | Install OpenCode CLI |
+| `./install.sh gui` | Open OpenCode GUI |
+| `./install.sh remove` | Remove from project |
 
 ---
 
-### 2. Setup Project Structure
+## Environment Variables
 
-```bash
-# Create directories
-mkdir -p .opencode/agents .opencode/skills
-
-# Symlink agents
-for agent in .agent/agents/*.md; do
-    ln -sf "../../.agent/agents/$(basename "$agent")" ".opencode/agents/"
-done
-
-# Symlink skills
-for skill in .agent/skills/*/; do
-    ln -sf "../../.agent/skills/$(basename "$skill")" ".opencode/skills/"
-done
-```
-
----
-
-## Usage
-
-### Start OpenCode CLI
-```bash
-opencode
-```
-
-### Start OpenCode GUI
-```bash
-opencode --gui
-```
-
-### Quick Agent Invoke
-```bash
-@b "Create REST API"        # backend-specialist
-@f "Create login form"      # frontend-specialist
-@db "Fix login error"      # debugger
-```
-
-### Commands
-```bash
-/plan "project name"        # Create plan
-/create "feature"           # Create feature
-/debug "issue description" # Debug
-```
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `AG_KIT_DIR` | `~/.ag-kit` | Global installation directory |
 
 ---
 
 ## Troubleshooting
 
 ### Symlinks not working on Windows
+
 Run PowerShell as Administrator or use Git Bash.
 
 ### OpenCode not found
+
 Make sure OpenCode is in your PATH. Restart your terminal.
 
-### Agents not detected
-Run `opencode init` in your project directory.
+### Already exists error
+
+Use `-f` or `--force` to overwrite:
+```bash
+./install.sh setup -f
+```
 
 ---
 
